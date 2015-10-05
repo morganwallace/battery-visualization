@@ -2,10 +2,10 @@
 
 ###Uses flask, D3.js, and AngularJS to interactively display battery performance data
 
-To run 
+To run (requires pip and virtualenv):
 	
 	$ git clone git@github.com:morganwallace/voltaiq-takehome.git
-	$ cd voltaiq-takehome
+	$ cd voltaiq-takehome	
 	$ virtualenv venv
 	$ pip install -r requirements.txt 
 	$ python app.py
