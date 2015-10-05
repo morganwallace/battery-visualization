@@ -1,6 +1,8 @@
-from flask import session, request, make_response, jsonify, flash, url_for, redirect,g,render_template,Flask, abort ,g
+from flask import session, request, make_response, jsonify, flash, url_for, redirect,g,render_template,Flask, abort
 import os,time, datetime, csv, json, re
 from urlparse import urlparse, urljoin
+import csv
+import json
 
 app = Flask(__name__)
 
@@ -8,11 +10,10 @@ app = Flask(__name__)
 app.config.from_object('config')
 
 
-@app.route('/')
+@app.route('/',methods=['POST','GET'])
 def home():
-    return render_template('index.html')
 
-
+	return render_template('index.html')
 
 if __name__ == '__main__':
     app.debug=True
