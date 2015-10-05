@@ -117,14 +117,16 @@ ChartPerCycle();
 var tsdata=[];
 d3.csv("static/data/TimeSeries.csv", function(error, data) {
   if (error) throw error;
+
+  //convert to numeric types
   data.forEach(function(d) {
     d.Current = +d.Current;
     d.Potential = +d.Potential;
     d['Test Time']= +d['Test Time'];
   });
 
-  tsdata=data;
-  ChartTimeSeries(1);
+  tsdata=data; //save to global variable
+  ChartTimeSeries(1); //initiate with the first cycle
 });
 
 var Currents={};
