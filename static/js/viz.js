@@ -1,6 +1,6 @@
 function ChartPerCycle(){
 	var margin = {top: 20, right: 20, bottom: 50, left: 60},
-	    width = 960 - margin.left - margin.right,
+	    width = $("#viz-container").width() - margin.left - margin.right,
 	    height = 400 - margin.top - margin.bottom;
 
 	var x = d3.scale.ordinal()
@@ -76,146 +76,140 @@ function ChartPerCycle(){
 }
 ChartPerCycle();
 
-/////// Time Series
 
-	var margin = {top: 20, right: 40, bottom: 50, left: 60},
-	    width = 960 - margin.left - margin.right,
-	    height = 400 - margin.top - margin.bottom;
 
-	var x = d3.scale.linear()
-	    .range([0, width]);
+/////// Time Series graph
 
-	var yScaleCurrent = d3.scale.linear()
-	    .range([height, 0]);
-	var yScalePotential = d3.scale.linear()
-	    .range([height, 0]);
+var margin = {top: 20, right: 40, bottom: 50, left: 60},
+    width = $("#viz-container").width() - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 
-	var color = d3.scale.category10();
+var x = d3.scale.linear()
+    .range([0, width]);
 
-	var xAxis = d3.svg.axis()
-	    .scale(x)
-	    .orient("bottom");
+var yScaleCurrent = d3.scale.linear()
+    .range([height, 0]);
+var yScalePotential = d3.scale.linear()
+    .range([height, 0]);
 
-	var yAxisCurrent = d3.svg.axis()
-	    .scale(yScaleCurrent)
-	    .orient("left");
+var color = d3.scale.category10();
 
-   var yAxisPotential = d3.svg.axis()
-	    .scale(yScalePotential)
-	    .orient("left");
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
 
-	var lineCurrent = d3.svg.line()
-	    .interpolate("basis")
-	    .x(function(d) { return x(d[0]); })
-	    .y(function(d) { return yScaleCurrent(d[1]); });
-	var linePotential = d3.svg.line()
-	    .interpolate("basis")
-	    .x(function(d) { return x(d[0]); })
-	    .y(function(d) { return yScalePotential(d[1]); });
+var yAxisCurrent = d3.svg.axis()
+    .scale(yScaleCurrent)
+    .orient("left");
 
-	
+var yAxisPotential = d3.svg.axis()
+    .scale(yScalePotential)
+    .orient("left");
+
+var lineCurrent = d3.svg.line()
+    .interpolate("basis")
+    .x(function(d) { return x(d[0]); })
+    .y(function(d) { return yScaleCurrent(d[1]); });
+var linePotential = d3.svg.line()
+    .interpolate("basis")
+    .x(function(d) { return x(d[0]); })
+    .y(function(d) { return yScalePotential(d[1]); });
+
+//By saving loaded data in a global variable, we avoid fetching it everytime the
+// graph is reacreated
 var tsdata=[];
 d3.csv("static/data/TimeSeries.csv", function(error, data) {
-  if (error) throw error;
+	if (error) throw error;
+    //convert to numeric types
+	data.forEach(function(d) {
+		d.Current = +d.Current;
+		d.Potential = +d.Potential;
+		d['Test Time']= +d['Test Time'];
+	});
 
-  //convert to numeric types
-  data.forEach(function(d) {
-    d.Current = +d.Current;
-    d.Potential = +d.Potential;
-    d['Test Time']= +d['Test Time'];
-  });
+	tsdata=data; //save to global variable
 
-  tsdata=data; //save to global variable
-  ChartTimeSeries(1); //initiate with the first cycle
+	ChartTimeSeries(1); //initiate with the first cycle
 });
 
-var Currents={};
-var Potentials={};
 function ChartTimeSeries(hoveredCycleNumber){
-	
 
-	
-	  data=tsdata.filter(function(d){return d["Cycle Number"]==hoveredCycleNumber;})
-	  color.domain(["Current","Potential"]);
+	data=tsdata.filter(function(d){return d["Cycle Number"]==hoveredCycleNumber;})
+	color.domain(["Current","Potential"]);
 
-	  Currents =  data.map(function(d) {
-	        return [d["Test Time"], d["Current"]];
-	      });
-	  Potentials=  data.map(function(d) {
-	        return [d["Test Time"],d["Potential"]];
-	      });
+	Currents =  data.map(function(d) {
+		return [d["Test Time"], d["Current"]];
+	});
+	Potentials=  data.map(function(d) {
+		return [d["Test Time"],d["Potential"]];
+	});
 
-	  var svg = d3.select("#viz-container").append("svg")
-	    .attr("width", width + margin.left + margin.right)
-	    .attr("height", height + margin.top + margin.bottom)
-	    .attr('id','timeSeries')
-	  .append("g")
-	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-	
-	  x.domain(d3.extent(data, function(d) { return d["Test Time"]; }));
+	var svg = d3.select("#viz-container").append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.attr('id','timeSeries')
+	.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	  yScaleCurrent.domain([
-	    d3.min(data, function(d) { return d.Current; }),
-	    d3.max(data, function(d) { return d.Current; })
-	  ]);
+	x.domain(d3.extent(data, function(d) { return d["Test Time"]; }));
 
-	  yScalePotential.domain([
-	    d3.min(data, function(d) { return d.Potential; }),
-	    d3.max(data, function(d) { return d.Potential; })
-	  ]);
+	yScaleCurrent.domain([
+		d3.min(data, function(d) { return d.Current; }),
+		d3.max(data, function(d) { return d.Current; })
+	]);
 
-	  svg.append("g")
-	      .attr("class", "x axis")
-	      .attr("transform", "translate(0," + height + ")")
-	      .call(xAxis)
-	    .append('text')
-	    	.attr('y',30)
-	    	.attr('x',width/2-85)
-	    	.text('Test Time (Range of Seconds)');
+	yScalePotential.domain([
+		d3.min(data, function(d) { return d.Potential; }),
+		d3.max(data, function(d) { return d.Potential; })
+	]);
 
-	  svg.append("g")
-	      .attr("class", "y axis current")
-	      .style('fill','steelblue')
-	      .call(yAxisCurrent)
-	    .append("text")
-	      .attr("transform", "rotate(-90)")
-	      .attr("y", 6)
-	      .attr("dy", ".71em")
-	      .style({
-	      	"text-anchor": "end",
-	      	"fill":"steelblue"
-		  })
-	      .text("Current");
-	   
-	   svg.append("g")
-	      .attr("class", "y axis potential")
-	      .attr("transform", "translate(" + width + " ,0)")
-	      .style('fill','red')
-	      .call(yAxisPotential)
-	    .append("text")
-	      .attr("transform", "rotate(-90)")
-	      .attr("y", 6)
-	      .attr("dy", ".71em")
-	      .attr('class','axis-label')
-	      .style("text-anchor", "end")
-	      .text("Potential");
+	svg.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis)
+	.append('text')
+		.attr('y',30)
+		.attr('x',width/2-85)
+		.text('Test Time (Range of Seconds)');
 
+	svg.append("g")
+		.attr("class", "y axis current")
+		.style('fill','steelblue')
+		.call(yAxisCurrent)
+	.append("text")
+		.attr("transform", "rotate(-90)")
+		.attr("y", 6)
+		.attr("dy", ".71em")
+		.style("text-anchor", "end")
+		.text("Current");
 
+	svg.append("g")
+		.attr("class", "y axis potential")
+		.attr("transform", "translate(" + width + " ,0)")
+		.style('fill','red')
+		.call(yAxisPotential)
+	.append("text")
+		.attr("transform", "rotate(-90)")
+		.attr("y", 6)
+		.attr("dy", ".71em")
+		.attr('class','axis-label')
+		.style("text-anchor", "end")
+		.text("Potential");
 
-	  svg.append("path")
-	      .attr("class", "line current")
-	      .attr("d", function(d) { return lineCurrent(Currents); } )
-	      .style("stroke", 'steelblue');
+	var currentLine=svg.append("path")
+		.attr("class", "line current")
+		.attr("d", function(d) { return lineCurrent(Currents); } )
+		.style("stroke", 'steelblue');
 
-	   svg.append("path")
-	      .attr("class", "line potential")
-	      .attr("d", function(d) { return linePotential(Potentials); } )
-	      .style("stroke", 'red');
+	var potentialLine=svg.append("path")
+		.attr("class", "line potential")
+		.attr("d", function(d) { return linePotential(Potentials); } )
+		.style("stroke", 'red');
 
-	   var title=svg.append('text')
-	   		.attr('x',width/2 - 45)
-	   		.attr('y',20)
-	   	   .text("Cycle Number: "+hoveredCycleNumber)
+	var title=svg.append('text')
+		.attr('x',width/2 - 45)
+		.attr('y',20)
+		.text("Cycle Number: "+hoveredCycleNumber)
 
 }
 
