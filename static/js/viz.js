@@ -52,6 +52,11 @@ function ChartPerCycle(){
 	      .attr("dy", ".71em")
 	      .style("text-anchor", "end")
 	      .text("Discharge Capacity");
+	   
+	   var title=svg.append('text')
+	   		.attr('x',width/2 - 85)
+	   		.attr('y',20)
+	   	   .text("Hover over a cycle to update the lower graph")
 
 	  svg.selectAll(".bar")
 	      .data(data)
