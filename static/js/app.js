@@ -1,13 +1,8 @@
-webApp = angular.module('WebApp', ['ngRoute', 'ui.bootstrap']);
+//Angular
+var app = angular.module('voltaiq-app',[]);
 
-webApp.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.
-		when('/about', {
-			templateUrl: '/views/about.html',
-			controller: function(){}
-		}).
-		otherwise({
-			templateUrl: '/views/homepage.html',
-			controller: 'HomepageController'
-		});
-}]);
+app.controller('VizController',function($http){
+	
+});
+
+

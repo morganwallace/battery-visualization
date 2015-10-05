@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html id="ng-app" ng-app="WebApp">
+<html id="ng-app" ng-app="voltaiq-app">
 <head>
 	<title>{{app_name}}</title>
 	<meta charset="UTF-8" />
 	 <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='assets/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="{{ url_for('static', filename='assets/styles/style.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css')}}" rel="stylesheet">
+
 </head>
 <body>
 
@@ -19,32 +20,32 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#/">Angular Bootstrap Boilerplate</a>
+				<a class="navbar-brand" href="#/">Voltaiq Take Home</a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse navbar-right">
 				<ul class="nav navbar-nav">
-					<li><a href="#/">Home</a></li>
-					<li><a href="#/about">About</a></li>
+					<!-- <li><a href="#/about">About</a></li> -->
 				</ul>
 			</div><!--/.nav-collapse -->
 		</div>
 	</nav>
 
-	<div id="pageContent">
-		<div class="container">
-			<div ng-view></div>
+	<div id="pageContent" ng-controller='VizController as Viz'>
+		<div class="container" id="viz-container">
+			
 		</div>
 	</div>
 
-	<script src="{{ url_for('static', filename='assets/js/jquery-2.1.4.min.js')}}"></script>
-	<script src="{{ url_for('static', filename='assets/angular/angular.min.js')}}"></script>
-	<script src="{{ url_for('static', filename='assets/angular/angular-route.min.js')}}"></script>
-	<script src="{{ url_for('static', filename='assets/js/angular-local-storage.js')}}"></script>
-	<script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.min.js')}}"></script>
-	<script src="{{ url_for('static', filename='assets/js/ui-bootstrap-tpls-0.13.0.min.js')}}"></script>
 
-	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
-	<script src="{{ url_for('static', filename='controllers/homepage.js')}}"></script>
-	<script src="{{ url_for('static', filename='js/d3.min.js')}}"></script>
+	
 </body>
+	<script src="{{ url_for('static', filename='assets/js/jquery-2.1.4.min.js')}}"></script>
+	<script src="{{ url_for('static', filename='assets/angular/angular.js')}}"></script>
+	<script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.min.js')}}"></script>
+
+	<script src="{{ url_for('static', filename='js/d3.min.js')}}"></script>
+	<script type="text/javascript">
+	</script>
+	<script src="{{ url_for('static', filename='js/app.js')}}"></script>
+<script src="{{ url_for('static', filename='js/viz.js')}}"></script>
 </html>
