@@ -1,6 +1,6 @@
 #Battery Visualizer
 
-###Uses flask, D3.js, and AngularJS to interactively display battery performance data
+###Uses flask and D3.js to interactively display battery performance data
 
 To run (requires pip and virtualenv):
 	
